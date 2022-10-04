@@ -6,8 +6,10 @@ import be.vdab.mail.services.LidService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,5 +47,22 @@ public class LidController {
             logger.error("Kan mail niet zenden", ex);
             return "redirect:/leden/nietgeregistreerd";
         }
+    }
+
+    @GetMapping("geregistreerd/{id}")
+    public String geregistreerd(@PathVariable long id){
+        return "geregistreerd";
+    }
+
+    @GetMapping("nietgeregistreerd")
+    public String nietGeregistreerd(){
+        return "nietgeregistreerd";
+    }
+
+    @GetMapping("{id}")
+    public ModelAndView info(@PathVariable long id){
+        var modelAndView = new ModelAndView("lidinfo");
+        lidService.findById(id).ifPresent(lid -> modelAndView.addObject(lid));
+        return modelAndView;
     }
 }
